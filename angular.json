@@ -17,6 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "baseHref": "/wedasoft-content/ng-wedasoft-web-tool-wheel-of-choices/",
             "outputPath": "dist/ng-wedasoft-web-tool-wheel-of-choices",
             "index": "src/index.html",
             "browser": "src/main.ts",
