@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {WheelOfChoicesComponent} from "../wheel-of-choices/wheel-of-choices.component";
 import {ConfigFormComponent} from "../config-form/config-form.component";
 
@@ -13,5 +13,22 @@ import {ConfigFormComponent} from "../config-form/config-form.component";
   styleUrl: './main.component.scss'
 })
 export class MainComponent {
+  @ViewChild('appWheelOfChoices') appWheelOfChoices?: WheelOfChoicesComponent;
+
+  onChoicesTaInputEventListener(taText: string) {
+    if (!this.appWheelOfChoices) {
+      console.log('ERROR appWheelOfChoices is undefined.')
+      return;
+    }
+    this.appWheelOfChoices.handleOnChoicesTaInputEvent(taText);
+  }
+
+  onSpinBtnClickEventListener() {
+    if (!this.appWheelOfChoices) {
+      console.log('ERROR appWheelOfChoices is undefined.')
+      return;
+    }
+    this.appWheelOfChoices.handleOnSpinBtnClickEvent();
+  }
 
 }
