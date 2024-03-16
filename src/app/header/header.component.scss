@@ -14,3 +14,8 @@ header.wheel-of-choices-header {
   text-align: center;
   color: white;
 }
+
+header > a.back-btn,
+header > div.empty-div {
+  width: 6rem;
+}
