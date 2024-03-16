@@ -10,7 +10,10 @@ html, body {
   min-height: 100vh;
   font-size: 16px;
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-  background-image: url("/assets/colored-polygons-bg.jpg");
+}
+
+html {
+  background-image: url("./assets/colored-polygons-bg.jpg");
   background-repeat: no-repeat no-repeat;
   background-position: center;
   background-size: cover;
@@ -37,6 +40,7 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 0.8rem;
 }
 
 .app-comp-ta,
@@ -50,4 +54,5 @@ html, body {
   background: white;
   color: rgba(0, 0, 0, .87);
   outline: none;
+  font-size: 0.8rem;
 }
