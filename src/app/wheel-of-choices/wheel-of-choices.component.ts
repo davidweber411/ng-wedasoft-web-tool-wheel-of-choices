@@ -77,35 +77,17 @@ export class WheelOfChoicesComponent implements AfterViewInit {
   }
 
   private createSectionsForOneSection(sectionText1: string) {
-    let section: HTMLDivElement = this.createWheelSectionDiv(sectionText1);
+    let section: HTMLDivElement = this.createWheelSectionDiv(sectionText1, 0);
     section.style.height = '100%';
     this.wheelDiv.appendChild(section);
   }
-
-  private createWheelSectionDiv(text: string) {
-    let section: HTMLDivElement = document.createElement('div');
-    section.classList.add('wheel-section');
-    section.innerHTML = text;
-
-    return section;
-  }
-
 
   private createSectionsForTwoSections(
     sectionText1: string,
     sectionText2: string) {
 
-    let section1: HTMLDivElement = document.createElement('div');
-    section1.classList.add('wheel-section');
-    section1.innerHTML = sectionText1;
-    section1.style.background = this.getRandomColor();
-    this.wheelDiv.appendChild(section1);
-
-    let section2: HTMLDivElement = document.createElement('div');
-    section2.classList.add('wheel-section');
-    section2.innerHTML = sectionText2;
-    section2.style.transform = "rotate(180deg)";
-    this.wheelDiv.appendChild(section2);
+    this.wheelDiv.appendChild(this.createWheelSectionDiv(sectionText1, 0));
+    this.wheelDiv.appendChild(this.createWheelSectionDiv(sectionText2, 180));
   }
 
   private createSectionsForThreeSections(
@@ -113,24 +95,16 @@ export class WheelOfChoicesComponent implements AfterViewInit {
     sectionText2: string,
     sectionText3: string) {
 
-    let section1: HTMLDivElement = document.createElement('div');
-    section1.classList.add('wheel-section');
-    section1.innerHTML = sectionText1;
+    let section1: HTMLDivElement = this.createWheelSectionDiv(sectionText1, 0);
     section1.style.clipPath = 'polygon(0 0, 100% 0, 100% 73.5%, 50% 100%)'
     this.wheelDiv.appendChild(section1);
 
-    let section2: HTMLDivElement = document.createElement('div');
-    section2.classList.add('wheel-section');
-    section2.innerHTML = sectionText2;
+    let section2: HTMLDivElement = this.createWheelSectionDiv(sectionText2, 120);
     section2.style.clipPath = 'polygon(0 0, 100% 0, 100% 73.5%, 50% 100%)'
-    section2.style.transform = "rotate(120deg)";
     this.wheelDiv.appendChild(section2);
 
-    let section3: HTMLDivElement = document.createElement('div');
-    section3.classList.add('wheel-section');
-    section3.innerHTML = sectionText3;
+    let section3: HTMLDivElement = this.createWheelSectionDiv(sectionText3, 240);
     section3.style.clipPath = 'polygon(0 0, 100% 0, 100% 73.5%, 50% 100%)'
-    section3.style.transform = "rotate(240deg)";
     this.wheelDiv.appendChild(section3);
   }
 
@@ -167,13 +141,18 @@ export class WheelOfChoicesComponent implements AfterViewInit {
 
     // create the wheel sections
     for (let i = 0; i < choices.length; i++) {
-      let section: HTMLDivElement = document.createElement('div');
-      section.classList.add('wheel-section');
+      let section: HTMLDivElement = this.createWheelSectionDiv(choices[i], (i * ADeg * 2));
       section.style.clipPath = clipPathValue;
-      section.style.transform = "rotate(" + (i * ADeg * 2) + "deg)";
-      section.innerHTML = choices[i];
       this.wheelDiv.appendChild(section);
     }
+  }
+
+  private createWheelSectionDiv(text: string, rotateDeg: number) {
+    let section: HTMLDivElement = document.createElement('div');
+    section.classList.add('wheel-section');
+    section.innerHTML = text;
+    section.style.transform = 'rotate(' + rotateDeg + 'deg)';
+    return section;
   }
 
 }
