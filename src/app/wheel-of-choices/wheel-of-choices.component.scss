@@ -43,15 +43,16 @@
   }
 }
 
-.wheel-section {
-  position: absolute;
-  background: green;
-  height: 50%;
-  width: 100%;
-  transform-origin: bottom;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  writing-mode: vertical-lr;
+:host ::ng-deep{
+  .wheel-section {
+    position: absolute;
+    background: green;
+    height: 50%;
+    width: 100%;
+    transform-origin: bottom;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-lr;
+  }
 }
-
