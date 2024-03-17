@@ -8,13 +8,13 @@ import {AfterViewInit, Component} from '@angular/core';
   styleUrl: './wheel-of-choices.component.scss'
 })
 export class WheelOfChoicesComponent implements AfterViewInit {
-  wheel!: HTMLDivElement;
+  wheelDiv!: HTMLDivElement;
   spinButton!: HTMLDivElement;
   choicesTextArea!: HTMLTextAreaElement;
   wheelRotationAngle: number = 0;
 
   ngAfterViewInit(): void {
-    this.wheel = document.querySelector(".wheel") as HTMLDivElement;
+    this.wheelDiv = document.querySelector(".wheel") as HTMLDivElement;
     this.spinButton = document.querySelector('.spin-button') as HTMLDivElement;
     this.choicesTextArea = document.querySelector('.choicesTextArea') as HTMLTextAreaElement;
     this.choicesTextArea.value = 'Pizza\nAsia\nIndian';
@@ -23,7 +23,7 @@ export class WheelOfChoicesComponent implements AfterViewInit {
 
   handleOnChoicesTaInputEvent(taText: string) {
     console.log('wheel: onChoicesTaInputEvent=' + taText);
-    this.wheel.innerHTML = ''; // removes all child nodes of the wheel
+    this.wheelDiv.innerHTML = ''; // removes all child nodes of the wheel
     let choices: string[] = this.choicesTextArea.value.replace('\r', '\n').replace('\n+', '\n').split('\n');
     this.initWheelParts(choices);
   }
@@ -31,7 +31,7 @@ export class WheelOfChoicesComponent implements AfterViewInit {
   handleOnSpinBtnClickEvent() {
     console.log('wheel: handleOnSpinBtnClickEvent');
     this.wheelRotationAngle += (1000 + Math.ceil(Math.random() * 4000));
-    this.wheel.style.transform = "rotate(" + this.wheelRotationAngle + "deg)";
+    this.wheelDiv.style.transform = "rotate(" + this.wheelRotationAngle + "deg)";
   }
 
 
@@ -58,19 +58,17 @@ export class WheelOfChoicesComponent implements AfterViewInit {
   }
 
   private initWheelParts(choices: string[]): void {
-    let wheelDiv: HTMLDivElement = document.querySelector('.wheel') as HTMLDivElement;
-
     if (choices.length == 1) {
-      this.createSectionsForOneSection(wheelDiv, choices[0]);
+      this.createSectionsForOneSection(choices[0]);
     }
     if (choices.length == 2) {
-      this.createSectionsForTwoSections(wheelDiv, choices[0], choices[1]);
+      this.createSectionsForTwoSections(choices[0], choices[1]);
     }
     if (choices.length == 3) {
-      this.createSectionsForThreeSections(wheelDiv, choices[0], choices[1], choices[2]);
+      this.createSectionsForThreeSections(choices[0], choices[1], choices[2]);
     }
     if (choices.length >= 4) {
-      this.createSectionsForFourAndMoreSections(wheelDiv, choices);
+      this.createSectionsForFourAndMoreSections(choices);
     }
     let wheelSectionsDivs: NodeListOf<HTMLDivElement> = document.querySelectorAll('.wheel div');
     wheelSectionsDivs.forEach(element => {
@@ -78,19 +76,22 @@ export class WheelOfChoicesComponent implements AfterViewInit {
     });
   }
 
-  private createSectionsForOneSection(
-    wheelDiv: HTMLDivElement,
-    sectionText1: string) {
-
-    let section: HTMLDivElement = document.createElement('div');
-    section.classList.add('wheel-section');
+  private createSectionsForOneSection(sectionText1: string) {
+    let section: HTMLDivElement = this.createWheelSectionDiv(sectionText1);
     section.style.height = '100%';
-    section.innerHTML = sectionText1;
-    wheelDiv.appendChild(section);
+    this.wheelDiv.appendChild(section);
   }
 
+  private createWheelSectionDiv(text: string) {
+    let section: HTMLDivElement = document.createElement('div');
+    section.classList.add('wheel-section');
+    section.innerHTML = text;
+
+    return section;
+  }
+
+
   private createSectionsForTwoSections(
-    wheelDiv: HTMLDivElement,
     sectionText1: string,
     sectionText2: string) {
 
@@ -98,17 +99,16 @@ export class WheelOfChoicesComponent implements AfterViewInit {
     section1.classList.add('wheel-section');
     section1.innerHTML = sectionText1;
     section1.style.background = this.getRandomColor();
-    wheelDiv.appendChild(section1);
+    this.wheelDiv.appendChild(section1);
 
     let section2: HTMLDivElement = document.createElement('div');
     section2.classList.add('wheel-section');
     section2.innerHTML = sectionText2;
     section2.style.transform = "rotate(180deg)";
-    wheelDiv.appendChild(section2);
+    this.wheelDiv.appendChild(section2);
   }
 
   private createSectionsForThreeSections(
-    wheelDiv: HTMLDivElement,
     sectionText1: string,
     sectionText2: string,
     sectionText3: string) {
@@ -117,21 +117,21 @@ export class WheelOfChoicesComponent implements AfterViewInit {
     section1.classList.add('wheel-section');
     section1.innerHTML = sectionText1;
     section1.style.clipPath = 'polygon(0 0, 100% 0, 100% 73.5%, 50% 100%)'
-    wheelDiv.appendChild(section1);
+    this.wheelDiv.appendChild(section1);
 
     let section2: HTMLDivElement = document.createElement('div');
     section2.classList.add('wheel-section');
     section2.innerHTML = sectionText2;
     section2.style.clipPath = 'polygon(0 0, 100% 0, 100% 73.5%, 50% 100%)'
     section2.style.transform = "rotate(120deg)";
-    wheelDiv.appendChild(section2);
+    this.wheelDiv.appendChild(section2);
 
     let section3: HTMLDivElement = document.createElement('div');
     section3.classList.add('wheel-section');
     section3.innerHTML = sectionText3;
     section3.style.clipPath = 'polygon(0 0, 100% 0, 100% 73.5%, 50% 100%)'
     section3.style.transform = "rotate(240deg)";
-    wheelDiv.appendChild(section3);
+    this.wheelDiv.appendChild(section3);
   }
 
   /**
@@ -151,20 +151,17 @@ export class WheelOfChoicesComponent implements AfterViewInit {
    * a = c/sin(C°)*sin(A°)
    *
    */
-  private createSectionsForFourAndMoreSections(
-    wheelDiv: HTMLDivElement,
-    choices: string[]) {
-
+  private createSectionsForFourAndMoreSections(choices: string[]) {
     // calculate variables
     const ADeg: number = (360 / choices.length) / 2;
     const CDeg: number = 180 - 90 - ADeg;
-    const c: number = wheelDiv.clientHeight / 2;
+    const c: number = this.wheelDiv.clientHeight / 2;
     const ADegRad: number = (ADeg * Math.PI) / 180; // Umwandlung in Radians, weil Math-Funktionen als Winkel den Radians erwarten
     const CDegRad: number = (CDeg * Math.PI) / 180; // Umwandlung in Radians, weil Math-Funktionen als Winkel den Radians erwarten
     const a: number = c / Math.sin(CDegRad) * Math.sin(ADegRad);
 
     // create the clip-path-value
-    const wheelWidthPx: number = wheelDiv.clientWidth;
+    const wheelWidthPx: number = this.wheelDiv.clientWidth;
     const wheelSectionWidthPx: number = a * 2;
     let clipPathValue: string = this.createClipPathValue(wheelWidthPx, wheelSectionWidthPx);
 
@@ -175,7 +172,7 @@ export class WheelOfChoicesComponent implements AfterViewInit {
       section.style.clipPath = clipPathValue;
       section.style.transform = "rotate(" + (i * ADeg * 2) + "deg)";
       section.innerHTML = choices[i];
-      wheelDiv.appendChild(section);
+      this.wheelDiv.appendChild(section);
     }
   }
 
