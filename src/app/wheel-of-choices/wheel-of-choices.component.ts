@@ -34,12 +34,11 @@ export class WheelOfChoicesComponent implements AfterViewInit {
     this.wheelDiv.style.transform = "rotate(" + this.wheelRotationAngle + "deg)";
   }
 
-
-  private getRandomColor(): string {
+  private getRandomColor(): number[] {
     const red = Math.floor(Math.random() * 256);
     const green = Math.floor(Math.random() * 256);
     const blue = Math.floor(Math.random() * 256);
-    return `rgb(${red},${green},${blue})`;
+    return [red, green, blue];
   }
 
   private createClipPathValue(
@@ -72,8 +71,20 @@ export class WheelOfChoicesComponent implements AfterViewInit {
     }
     let wheelSectionsDivs: NodeListOf<HTMLDivElement> = document.querySelectorAll('.wheel div');
     wheelSectionsDivs.forEach(element => {
-      element.style.background = this.getRandomColor();
+      const randomColor = this.getRandomColor();
+      const contrastColor = this.createContrastColorOf(randomColor);
+      element.style.background = `rgb(${randomColor[0]},${randomColor[1]},${randomColor[2]})`
+      element.style.color = `rgb(${contrastColor[0]},${contrastColor[1]},${contrastColor[2]})`
     });
+  }
+
+  private createContrastColorOf(rgb: number[]): number[] {
+    const r: number = rgb[0] / 255;
+    const g: number = rgb[1] / 255;
+    const b: number = rgb[2] / 255;
+    const helligkeit: number = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    const schwellenwert: number = 0.5;
+    return helligkeit < schwellenwert ? [255, 255, 255] : [0, 0, 0];
   }
 
   private createSectionsForOneSection(sectionText1: string) {
